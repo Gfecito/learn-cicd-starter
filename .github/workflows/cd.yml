@@ -18,5 +18,38 @@ jobs:
         with:
           go-version: "1.23.0"
       
+      - name: Print
+        run: echo "Building go binary"
+
       - name: Build
         run: ./scripts/buildprod.sh
+
+      - name: Print
+        run: echo "Built go binary"
+
+      - name: Print
+        run: echo "Authenticating with GCP"
+
+      - id: 'auth'
+        name: 'Authenticate with Google Cloud (GCP)'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+      - name: Print
+        run: echo "Authenticated with GCP"
+
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+
+      - name: Print
+        run: echo "Testing Cloud SDK"
+
+      - name: 'Use gcloud CLI'
+        run: 'gcloud info'
+
+      - name: Print
+        run: echo "Pushing Docker image"
+
+      - name: 'Push Docker image'
+        run: gcloud builds submit --tag us-central1-docker.pkg.dev/notely-449016/notely-ar-repo/notely:latest .
